@@ -1,0 +1,69 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+namespace e_mail_menagement
+{
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
+    {
+        public MainWindow()
+        {
+            InitializeComponent();
+        }
+        private void SeparateDataFromEmail(string email)
+        {
+            email = email.ToLower();
+            email=email.Trim();
+            int atIndex=email.IndexOf("@"); 
+           if(atIndex>0 && atIndex<email.Length)
+            {
+                int dotIndex;
+                // separaete e-mail in to 2 substrings     beforeAt @ postAt
+                string beforeAt = email.Substring(0, atIndex-1);
+                dotIndex = beforeAt.IndexOf(".");
+                
+                string name = beforeAt.Substring(0, dotIndex);
+                name = char.ToUpper(name[0]) +name.Substring(1);
+                LabelName.Content = "Name: "+name;
+
+                string surename =email.Substring(dotIndex+1,(atIndex-dotIndex)-1);
+                surename = char.ToUpper(surename[0]) + surename.Substring(1);
+                LabelSurename.Content ="Surename: "+surename;
+                
+                string postAt = email.Substring(atIndex+1);
+                dotIndex=postAt.IndexOf(".");
+    
+                LabelDepartment.Content = "Department: " + postAt.Substring(0, dotIndex);
+                int nextDotIndex = postAt.IndexOf('.', dotIndex); //how meany chars is between dots -1 .dev.  next= 2
+                LabelJob.Content = "Job title: " + postAt.Substring(dotIndex+1, nextDotIndex+1);
+            }
+        }
+
+        private void ManageEmail(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter)
+            {
+                SeparateDataFromEmail(textBoxEmail.Text);
+            }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            SeparateDataFromEmail(textBoxEmail.Text);
+        }
+    }
+}

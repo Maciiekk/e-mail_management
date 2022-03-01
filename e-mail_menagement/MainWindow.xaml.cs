@@ -15,9 +15,6 @@ using System.Windows.Shapes;
 
 namespace e_mail_menagement
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -48,22 +45,51 @@ namespace e_mail_menagement
                 dotIndex=postAt.IndexOf(".");
     
                 LabelDepartment.Content = "Department: " + postAt.Substring(0, dotIndex);
-                int nextDotIndex = postAt.IndexOf('.', dotIndex); //how meany chars is between dots -1 .dev.  next= 2
-                LabelJob.Content = "Job title: " + postAt.Substring(dotIndex+1, nextDotIndex+1);
+                int nextDotIndex = postAt.IndexOf('.', dotIndex+1); //how meany chars is between dots -1 .dev.  next= 2
+                LabelJob.Content = "Job title: " + postAt.Substring(dotIndex+1, nextDotIndex-dotIndex-1 );
             }
+        }
+
+        private bool IsThatEmailCorrect(string email)
+        {
+            if(String.IsNullOrWhiteSpace(email)) 
+            {
+                return false;
+            }
+
+            email = email.Trim();
+            email = email.ToLower();
+
+            if(!email.Contains('@'))  
+                return false;
+
+            int countDots = email.Count(f => (f == '.'));
+           if (countDots != 4)
+               return false;
+          
+            int dotIndex = email.IndexOf('.');
+
+            int x = email.IndexOf('.', dotIndex + 1);
+            //if (email.IndexOf('.', dotIndex+1) < email.IndexOf('@'))   TO DO 
+            //    return false;
+            if(email.Substring(email.Length-9)!=".comp.com")
+                return false;
+            return true;
         }
 
         private void ManageEmail(object sender, KeyEventArgs e)
         {
             if(e.Key == Key.Enter)
             {
+               if( IsThatEmailCorrect(textBoxEmail.Text))
                 SeparateDataFromEmail(textBoxEmail.Text);
             }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            SeparateDataFromEmail(textBoxEmail.Text);
+            if (IsThatEmailCorrect(textBoxEmail.Text))
+                SeparateDataFromEmail(textBoxEmail.Text);
         }
     }
 }

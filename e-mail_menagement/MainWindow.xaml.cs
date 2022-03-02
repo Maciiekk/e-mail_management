@@ -54,26 +54,41 @@ namespace e_mail_menagement
         {
             if(String.IsNullOrWhiteSpace(email)) 
             {
+                LabelWarning.Content = "Warning: this is not a valid email address.\n Field is empty ";
                 return false;
             }
 
             email = email.Trim();
             email = email.ToLower();
 
-            if(!email.Contains('@'))  
+            if (!email.Contains('@')) 
+            {
+                LabelWarning.Content = "Warning: this is not a valid email address.\nMissing \"@\" ";
                 return false;
+            }
 
             int countDots = email.Count(f => (f == '.'));
            if (countDots != 4)
-               return false;
-          
+            {
+                LabelWarning.Content = "Warning: this is not a valid email address.\nInvalid  format ";
+                return false;
+            }
             int dotIndex = email.IndexOf('.');
 
             int x = email.IndexOf('.', dotIndex + 1);
-            //if (email.IndexOf('.', dotIndex+1) < email.IndexOf('@'))   TO DO 
-            //    return false;
-            if(email.Substring(email.Length-9)!=".comp.com")
+            if (email.IndexOf('.', dotIndex+1) < email.IndexOf('@'))
+            {
+                LabelWarning.Content = "Warning: this is not a valid email address.\nInvalid  format ";
                 return false;
+            }
+     
+            if(email.Substring(email.Length-9)!=".comp.com")
+            {
+                LabelWarning.Content = "Warning: this is not a valid email address.\n It is not a company email ";
+                return false;
+            }
+
+            LabelWarning.Content = " ";
             return true;
         }
 
